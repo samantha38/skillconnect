@@ -47,6 +47,21 @@ app.get("/jobs", (req, res) => {
     });
 });
 
+// API Route to Add a New Job
+app.post("/add-job", (req, res) => {
+    const { title, description, location, salary } = req.body;
+    const sql = "INSERT INTO jobs (title, description, location, salary) VALUES (?, ?, ?, ?)";
+    const values = [title, description, location, salary];
+
+    db.query(sql, values, (err, result) => {
+        if (err) {
+            console.error("Error adding job:", err);
+            return res.status(500).json({ message: "Error adding job" });
+        }
+        res.json({ message: "Job added successfully", id: result.insertId });
+    });
+});
+
 // Start Server
 app.listen(5000, () => {
     console.log("Server running on port 5000");

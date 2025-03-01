@@ -1,53 +1,51 @@
-/*import React from "react";
-import Navigation from "./Navigation";
-import SearchBar from "./SearchBar";
-import Reviews from "./Reviews";
-import AboutUs from "./AboutUs";
-
-function App() {
-  return (
-    <div>
-      <Navigation />
-      <SearchBar />
-      <AboutUs />
-      <footer>
-      <Reviews />
-      </footer>
-    </div>
-  );
-}
-
-export default App;*/
-
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Navigation from './Navigation';
 import SearchBar from './SearchBar';
 import Reviews from './Reviews';
 import AboutUs from './AboutUs';
-import Profile from './Profile'; // Import the Profile component
+import Profile from './Profile';
+import JobListings from "./JobListings";
+import JobForm from './JobForm';
 
 function App() {
-    return (
-        <Router>
-            <div>
-                <Navigation />
-                <Routes>
-                    <Route path="/" element={
-                        <>
-                            <SearchBar />
-                            <AboutUs /> {/* About Us remains unchanged */}
-                            <footer>
-                                <Reviews />
-                            </footer>
-                        </>
-                    } />
-                    <Route path="/about" element={<AboutUs />} /> {/* About Us route */}
-                    <Route path="/profile" element={<Profile />} /> {/* Add Profile route */}
-                </Routes>
-            </div>
-        </Router>
-    );
+  const [searchTitle, setSearchTitle] = useState("");
+  const [searchLocation, setSearchLocation] = useState("");
+
+  const [refresh, setRefresh] = useState(false);
+
+  // Function to refresh job listings when a new job is added
+  const handleJobAdded = () => {
+    setRefresh(prev => !prev);
+  };
+
+  return (
+    <Router>
+      <div>
+        <Navigation />
+        <Routes>
+          <Route path="/" element={
+            <>
+            <div className="mt-5">
+              <SearchBar  onSearch={(title, location) => {
+                setSearchTitle(title);
+                setSearchLocation(location);
+              }} />
+              </div>
+              <JobListings searchTitle={searchTitle} searchLocation={searchLocation} />
+              <AboutUs />
+              <footer>
+                <Reviews />
+              </footer>
+            </>
+          } />
+          <Route path="/about" element={<AboutUs />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/add-job" element={<JobForm onJobAdded={handleJobAdded} />} /> {/* Added JobForm route */}
+        </Routes>
+      </div>
+    </Router>
+  );
 }
 
 export default App;

@@ -1,5 +1,3 @@
-/*
-
 const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
@@ -7,54 +5,6 @@ const cors = require("cors");
 const app = express();
 app.use(cors());
 app.use(express.json());
-
-// Connect to MySQL
-const db = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "",
-    database: "nodejs-login"
-});
-
-db.connect((err) => {
-    if (err) {
-        console.error("Database connection error:", err);
-    } else {
-        console.log("Connected to MySQL");
-    }
-});
-
-// ✅ **Fetch First Profile**
-app.get("/profile", (req, res) => {
-    const query = "SELECT * FROM job_seekers ORDER BY id LIMIT 1";
-
-    db.query(query, (err, result) => {
-        if (err) {
-            console.error("Error fetching profile:", err);
-            return res.status(500).json({ message: "Error fetching profile" });
-        }
-        if (result.length > 0) {
-            res.json(result[0]); // Return the first job seeker's profile
-        } else {
-            res.status(404).json({ message: "No profiles found" });
-        }
-    });
-});
-
-// Start Server
-app.listen(5000, () => {
-    console.log("✅ Server running on port 5000");
-});
-*/
-
-
-const express = require('express');
-const mysql = require('mysql2');
-const cors = require('cors');
-
-const app = express();
-app.use(cors()); // Enable CORS
-app.use(express.json()); // Parse JSON request bodies
 
 // Database connection
 const db = mysql.createConnection({
@@ -65,33 +15,38 @@ const db = mysql.createConnection({
 });
 
 db.connect((err) => {
-    if (err) throw err;
-    console.log('MySQL connected');
+    if (err) {
+        console.error("Database connection error:", err);
+        process.exit(1);
+    }
+    console.log("Connected to MySQL");
 });
+
+// ========== Profile Routes ==========
 
 // Fetch profile data
 app.get('/profile/:id?', (req, res) => {
     const userId = req.params.id;
-
     let sql;
     let params;
 
     if (userId) {
-        // Fetch profile by specific ID
         sql = 'SELECT id, email, name, qualification, job FROM job_seekers WHERE id = ?';
         params = [userId];
     } else {
-        // Fetch the first user's profile (smallest ID)
         sql = 'SELECT id, email, name, qualification, job FROM job_seekers ORDER BY id ASC LIMIT 1';
         params = [];
     }
 
     db.query(sql, params, (err, result) => {
-        if (err) throw err;
+        if (err) {
+            console.error("Error fetching profile:", err);
+            return res.status(500).json({ message: "Database error" });
+        }
         if (result.length > 0) {
             res.json(result[0]);
         } else {
-            res.status(404).json({ message: 'No user found' });
+            res.status(404).json({ message: "No user found" });
         }
     });
 });
@@ -101,12 +56,54 @@ app.put('/profile/:id', (req, res) => {
     const userId = req.params.id;
     const { qualification, job } = req.body;
     const sql = 'UPDATE job_seekers SET qualification = ?, job = ? WHERE id = ?';
+    
     db.query(sql, [qualification, job, userId], (err, result) => {
         if (err) {
-            console.error('Database error:', err);
-            return res.status(500).json({ message: 'Database error' });
+            console.error("Database error:", err);
+            return res.status(500).json({ message: "Database error" });
         }
-        res.json({ message: 'Profile updated successfully' });
+        res.json({ message: "Profile updated successfully" });
+    });
+});
+
+// ========== Job Routes ==========
+
+// Fetch jobs with optional filtering
+app.get("/jobs", (req, res) => {
+    const { title, location } = req.query;
+    let sql = "SELECT * FROM jobs WHERE 1=1";
+    let queryParams = [];
+
+    if (title) {
+        sql += " AND title LIKE ?";
+        queryParams.push(`%${title}%`);
+    }
+    if (location) {
+        sql += " AND location LIKE ?";
+        queryParams.push(`%${location}%`);
+    }
+
+    db.query(sql, queryParams, (err, results) => {
+        if (err) {
+            console.error("Error fetching jobs:", err);
+            return res.status(500).json({ message: "Error fetching jobs" });
+        }
+        res.json(results);
+    });
+});
+
+// Add a new job
+app.post("/add-job", (req, res) => {
+    const { title, description, location, salary } = req.body;
+    const sql = "INSERT INTO jobs (title, description, location, salary) VALUES (?, ?, ?, ?)";
+    const values = [title, description, location, salary];
+
+    db.query(sql, values, (err, result) => {
+        if (err) {
+            console.error("Error adding job:", err);
+            return res.status(500).json({ message: "Error adding job" });
+        }
+        res.json({ message: "Job added successfully", id: result.insertId });
     });
 });
 

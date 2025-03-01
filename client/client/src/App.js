@@ -1,25 +1,53 @@
-import logo from './logo.svg';
-import './App.css';
+/*import React from "react";
+import Navigation from "./Navigation";
+import SearchBar from "./SearchBar";
+import Reviews from "./Reviews";
+import AboutUs from "./AboutUs";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Navigation />
+      <SearchBar />
+      <AboutUs />
+      <footer>
+      <Reviews />
+      </footer>
     </div>
   );
+}
+
+export default App;*/
+
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Navigation from './Navigation';
+import SearchBar from './SearchBar';
+import Reviews from './Reviews';
+import AboutUs from './AboutUs';
+import Profile from './Profile'; // Import the Profile component
+
+function App() {
+    return (
+        <Router>
+            <div>
+                <Navigation />
+                <Routes>
+                    <Route path="/" element={
+                        <>
+                            <SearchBar />
+                            <AboutUs /> {/* About Us remains unchanged */}
+                            <footer>
+                                <Reviews />
+                            </footer>
+                        </>
+                    } />
+                    <Route path="/about" element={<AboutUs />} /> {/* About Us route */}
+                    <Route path="/profile" element={<Profile />} /> {/* Add Profile route */}
+                </Routes>
+            </div>
+        </Router>
+    );
 }
 
 export default App;

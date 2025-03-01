@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-
 const JobListings = ({ searchTitle, searchLocation }) => {
   const [jobs, setJobs] = useState([]);
+  const [requestedJobs, setRequestedJobs] = useState([]);
 
   // Fetch jobs from the backend with filters
   const fetchJobs = async () => {
@@ -25,6 +25,11 @@ const JobListings = ({ searchTitle, searchLocation }) => {
     fetchJobs();
   }, [searchTitle, searchLocation]); // Refetch when filters change
 
+  const handleRequestJob = (job) => {
+    setRequestedJobs((prev) => [...prev, job]);
+    alert(`You have requested the job: ${job.title}`);
+  };
+
   return (
     <div className="container mt-4">
       <h2 className="text-center mb-4 text-primary">Job Listings</h2>
@@ -44,12 +49,26 @@ const JobListings = ({ searchTitle, searchLocation }) => {
                   <p className="text-muted">
                     <strong>Salary:</strong> {job.salary}
                   </p>
+                  <button 
+                    className="btn btn-primary" 
+                    onClick={() => handleRequestJob(job)}
+                  >
+                    Request Job
+                  </button>
                 </div>
               </div>
             </div>
           ))
         )}
       </div>
+      
+      {/* Requested Jobs List */}
+      <h3 className="mt-4">Requested Jobs:</h3>
+      <ul>
+        {requestedJobs.map((job, index) => (
+          <li key={index}>{job.title} - {job.location}</li>
+        ))}
+      </ul>
     </div>
   );
 };

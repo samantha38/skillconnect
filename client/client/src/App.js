@@ -1,25 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from 'react';
+import JobForm from './components/JobForm';
+import JobListings from './components/JobListings';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const [refresh, setRefresh] = useState(false);
+
+    // Function to refresh job listings when a new job is added
+    const handleJobAdded = () => {
+        setRefresh(prev => !prev);
+    };
+
+    return (
+        <div>
+            <h1>Job Portal</h1>
+            <JobForm onJobAdded={handleJobAdded} />
+            <JobListings key={refresh} />  {/* Refresh when state changes */}
+        </div>
+    );
 }
 
 export default App;

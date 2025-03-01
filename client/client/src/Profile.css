@@ -1,0 +1,70 @@
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    max-width: 500px;
+    margin: 50px auto; /* Adds spacing around the profile card */
+    padding: 20px;
+}
+
+.profile-card {
+    background: white;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    padding: 30px;
+    width: 100%;
+    text-align: center;
+}
+
+.profile-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 20px;
+}
+
+.profile-name {
+    font-size: 22px;
+    font-weight: bold; /* Name is now bold */
+    margin-bottom: 5px;
+}
+
+.profile-role {
+    font-size: 16px;
+    color: gray;
+    margin-bottom: 30px; /* More space before inputs */
+}
+
+.profile-input {
+    width: 100%;
+    max-width: 350px;
+    margin: auto;
+    text-align: center;
+    margin-bottom: 20px; /* More space between inputs */
+}
+
+.profile-input label {
+    font-weight: 600; /* Labels in bold */
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-control {
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 8px;
+}
+
+.update-btn {
+    width: 100%;
+    max-width: 250px;
+    margin-top: 20px;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+}

@@ -56,6 +56,7 @@ const Navigation = () => {
         <Link to="/about">About</Link>
         <Link to="/services">Services</Link>
         <Link to="/contact">Contact</Link>
+        <Link to="/profile">Profile</Link>
       </div>
       <div className="hamburger" onClick={() => setIsOpen(!isOpen)}>
         ☰

@@ -7,6 +7,7 @@ import AboutUs from './AboutUs';
 import Profile from './Profile';
 import JobListings from "./JobListings";
 import JobForm from './JobForm';
+import WorkersList from './WorkersList';
 
 function App() {
   const [searchTitle, setSearchTitle] = useState("");
@@ -42,6 +43,7 @@ function App() {
           <Route path="/about" element={<AboutUs />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/add-job" element={<JobForm onJobAdded={handleJobAdded} />} /> {/* Added JobForm route */}
+          <Route path="/workers" element={<WorkersList />} />
         </Routes>
       </div>
     </Router>

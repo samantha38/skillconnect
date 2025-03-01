@@ -4,14 +4,14 @@ const cors = require("cors");
 
 const app = express();
 app.use(cors());
-app.use(express.json()); // Allows parsing JSON request body
+app.use(express.json());
 
 // Connect to MySQL
 const db = mysql.createConnection({
     host: "localhost",
-    user: "root",       // Change if using a different username
-    password: "",       // Enter your MySQL password
-    database: "nodejs-login"  // Make sure this matches your database name
+    user: "root", // Change if needed
+    password: "", // Add your MySQL password
+    database: "nodejs-login" // Ensure this matches your DB
 });
 
 db.connect((err) => {
@@ -22,27 +22,23 @@ db.connect((err) => {
     }
 });
 
-// API Route to Add a Job
-app.post("/add-job", (req, res) => {
-    const { title, description, location, salary } = req.body;
+// API Route to Fetch Jobs with Filtering
+app.get("/jobs", (req, res) => {
+    const { title, location } = req.query;
+    let sql = "SELECT * FROM jobs WHERE 1=1"; // Base query
 
-    if (!title || !description || !location || !salary) {
-        return res.status(400).json({ message: "All fields are required" });
+    let queryParams = [];
+
+    if (title) {
+        sql += " AND title LIKE ?";
+        queryParams.push(`%${title}%`);
+    }
+    if (location) {
+        sql += " AND location LIKE ?";
+        queryParams.push(`%${location}%`);
     }
 
-    const query = "INSERT INTO jobs (title, description, location, salary) VALUES (?, ?, ?, ?)";
-    db.query(query, [title, description, location, salary], (err, result) => {
-        if (err) {
-            console.error("Error inserting job:", err);
-            return res.status(500).json({ message: "Error adding job" });
-        }
-        res.status(201).json({ message: "Job added successfully" });
-    });
-});
-
-// API Route to Fetch Jobs
-app.get("/jobs", (req, res) => {
-    db.query("SELECT * FROM jobs", (err, results) => {
+    db.query(sql, queryParams, (err, results) => {
         if (err) {
             console.error("Error fetching jobs:", err);
             return res.status(500).json({ message: "Error fetching jobs" });
@@ -51,6 +47,7 @@ app.get("/jobs", (req, res) => {
     });
 });
 
+// Start Server
 app.listen(5000, () => {
     console.log("Server running on port 5000");
 });

@@ -326,7 +326,8 @@ const Profile = () => {
     return (
         <div className="profile-container">
             <div className="profile-card">
-                <img src="/logo192.png" alt="Profile" className="profile-img" />
+            <img src="/logo192.png" alt="Profile" className="profile-img" />
+
                 <h2 className="profile-name">{profile.name}</h2>
                 <p className="profile-role">{profile.email}</p>
               

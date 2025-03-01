@@ -54,8 +54,6 @@ const Navigation = () => {
       <div className={`nav-links ${isOpen ? "open" : ""}`}>
         <Link to="/">Home</Link>
         <Link to="/about">About</Link>
-        <Link to="/services">Services</Link>
-        <Link to="/contact">Contact</Link>
         <Link to="/profile">Profile</Link>
         <Link to="/add-job">Add Vacancy</Link>
         <Link to="/workers">Workers List</Link>

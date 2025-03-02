@@ -1,52 +1,24 @@
-/*import React, { useState } from "react";
-import "./Navigation.css";
-
-
-const Navigation = () => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  return (
-    <nav className="navigation">
-      <div className="nav-logo">SkillConnect</div>
-      <div className={`nav-links ${isOpen ? "open" : ""}`}>
-        <ul>
-        <li><Link to="/">Home</Link></li>
-        <li><Link to="/profile">Profile</Link></li> 
-      </ul>
-      </div>
-      <div className="hamburger" onClick={() => setIsOpen(!isOpen)}>
-        ☰
-      </div>
-    </nav>
-  );
-};
-
-export default Navigation;*/
-
-/*
-import React from "react";
-import { Link } from "react-router-dom";
-
-const Navigation = () => {
-  return (
-    <nav>
-      <ul>
-        <li><Link to="/">Home</Link></li>
-        <li><Link to="/profile">Profile</Link></li> 
-      </ul>
-    </nav>
-  );
-};
-
-export default Navigation;
-*/
-
 import React, { useState } from "react";
-import { Link } from "react-router-dom"; // Import Link
+import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
 import "./Navigation.css";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // State to track login status
+  const navigate = useNavigate(); // Hook for navigation
+
+  // Function to handle login
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+    navigate("/login"); // Navigate to the login page
+  };
+
+  // Function to handle logout
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    // Add any additional logout logic here (e.g., clearing tokens, etc.)
+    navigate("/"); // Navigate to the home page after logout
+  };
 
   return (
     <nav className="navigation">
@@ -58,6 +30,21 @@ const Navigation = () => {
         <Link to="/add-job">Add Vacancy</Link>
         <Link to="/workers">Workers List</Link>
 
+        {/* Conditionally render Login/Logout and Sign Up buttons */}
+        {isLoggedIn ? (
+          <button onClick={handleLogout} className="nav-button">
+            Logout
+          </button>
+        ) : (
+          <>
+            <button onClick={handleLogin} className="nav-button">
+              Login
+            </button>
+            <Link to="/signup" className="nav-button">
+              Sign Up
+            </Link>
+          </>
+        )}
       </div>
       <div className="hamburger" onClick={() => setIsOpen(!isOpen)}>
         ☰
